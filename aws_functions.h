@@ -168,13 +168,13 @@ static inline const ngx_str_t* ngx_aws_auth__canonize_query_string(ngx_pool_t *p
 
 static inline const ngx_str_t* ngx_aws_auth__host_from_bucket(ngx_pool_t *pool,
 		const ngx_str_t *s3_bucket) {
-	static const char HOST_PATTERN[] = ".s3.amazonaws.com";
+	static const char HOST_PATTERN[] = "play.minio.io:9000";
 	ngx_str_t *host;
 
 	host = ngx_palloc(pool, sizeof(ngx_str_t));
-	host->len = s3_bucket->len + sizeof(HOST_PATTERN) + 1;
+	host->len = sizeof(HOST_PATTERN) + 1;
 	host->data = ngx_palloc(pool, host->len);
-	host->len = ngx_snprintf(host->data, host->len, "%V%s", s3_bucket, HOST_PATTERN) - host->data;
+	host->len = ngx_snprintf(host->data, host->len, "%V", HOST_PATTERN) - host->data;
 
 	return host;
 }
