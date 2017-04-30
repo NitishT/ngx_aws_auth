@@ -65,7 +65,7 @@ static ngx_command_t  ngx_http_aws_auth_commands[] = {
       0,
       0,
       NULL },
-  
+
       ngx_null_command
 };
 
@@ -106,12 +106,12 @@ ngx_http_aws_auth_create_loc_conf(ngx_conf_t *cf)
 
     conf = ngx_pcalloc(cf->pool, sizeof(ngx_http_aws_auth_conf_t));
     conf->enabled = 0;
-    ngx_str_set(&conf->endpoint, "s3.amazonaws.com");
+    //ngx_str_set(&conf->endpoint, "s3.amazonaws.com");
     if (conf == NULL) {
         return NGX_CONF_ERROR;
     }
 
-    return conf;    
+    return conf;
 }
 
 static char *
@@ -123,7 +123,7 @@ ngx_http_aws_auth_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
     ngx_conf_merge_str_value(conf->access_key, prev->access_key, "");
     ngx_conf_merge_str_value(conf->key_scope, prev->key_scope, "");
     ngx_conf_merge_str_value(conf->signing_key, prev->signing_key, "");
-    ngx_conf_merge_str_value(conf->endpoint, prev->endpoint, "s3.amazonaws.com");
+    ngx_conf_merge_str_value(conf->endpoint, prev->endpoint, "");
     ngx_conf_merge_str_value(conf->bucket_name, prev->bucket_name, "");
 
     if(conf->signing_key_decoded.data == NULL)
@@ -237,7 +237,6 @@ ngx_aws_auth_req_init(ngx_conf_t *cf)
 
     return NGX_OK;
 }
-/* 
+/*
  * vim: ts=4 sw=4 et
  */
-
