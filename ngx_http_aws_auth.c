@@ -105,7 +105,7 @@ ngx_http_aws_auth_create_loc_conf(ngx_conf_t *cf)
     ngx_http_aws_auth_conf_t  *conf;
 
     conf = ngx_pcalloc(cf->pool, sizeof(ngx_http_aws_auth_conf_t));
-    conf->enabled = 0;
+    conf->enabled = 1;
     //ngx_str_set(&conf->endpoint, "s3.amazonaws.com");
     if (conf == NULL) {
         return NGX_CONF_ERROR;
@@ -160,8 +160,12 @@ ngx_http_aws_proxy_sign(ngx_http_request_t *r)
         return NGX_HTTP_NOT_ALLOWED;
     }
 
+    safe_ngx_log_error(r, &conf->key_scope, &conf->bucket_name, &conf->endpoint);
+
     const ngx_array_t* headers_out = ngx_aws_auth__sign(r->pool, r,
         &conf->access_key, &conf->signing_key_decoded, &conf->key_scope, &conf->bucket_name, &conf->endpoint);
+
+    safe_ngx_log_error(r, &conf->key_scope, &conf->bucket_name, &conf->endpoint);
 
     ngx_uint_t i;
     for(i = 0; i < headers_out->nelts; i++)
