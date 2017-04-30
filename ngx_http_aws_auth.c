@@ -6,13 +6,6 @@
 #define AWS_S3_VARIABLE "s3_auth_token"
 #define AWS_DATE_VARIABLE "aws_date"
 
-// mainly useful to avoid having to full instantiate request structures for
-// tests...
-#define safe_ngx_log_error(req, ...)                                  \
-  if (req->connection) {                                              \
-    ngx_log_error(NGX_LOG_ERR, req->connection->log, 0, __VA_ARGS__); \
-  }
-  
 static void* ngx_http_aws_auth_create_loc_conf(ngx_conf_t *cf);
 static char* ngx_http_aws_auth_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child);
 static ngx_int_t ngx_aws_auth_req_init(ngx_conf_t *cf);
@@ -167,12 +160,8 @@ ngx_http_aws_proxy_sign(ngx_http_request_t *r)
         return NGX_HTTP_NOT_ALLOWED;
     }
 
-    safe_ngx_log_error(r, &conf->key_scope, &conf->bucket_name, &conf->endpoint);
-
     const ngx_array_t* headers_out = ngx_aws_auth__sign(r->pool, r,
         &conf->access_key, &conf->signing_key_decoded, &conf->key_scope, &conf->bucket_name, &conf->endpoint);
-
-    safe_ngx_log_error(r, &conf->key_scope, &conf->bucket_name, &conf->endpoint);
 
     ngx_uint_t i;
     for(i = 0; i < headers_out->nelts; i++)
