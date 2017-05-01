@@ -165,19 +165,6 @@ static inline const ngx_str_t* ngx_aws_auth__canonize_query_string(ngx_pool_t *p
 	return retval;
 }
 
-static inline const ngx_str_t* ngx_aws_auth__host_from_bucket(ngx_pool_t *pool,
-		const ngx_str_t *s3_bucket) {
-	static const char HOST_PATTERN[] = "play.minio.io:9000";
-	ngx_str_t *host;
-
-	host = ngx_palloc(pool, sizeof(ngx_str_t));
-	host->len = sizeof(HOST_PATTERN) + 1;
-	host->data = ngx_palloc(pool, host->len);
-	host->len = ngx_snprintf(host->data, host->len, "%V", HOST_PATTERN) - host->data;
-
-	return host;
-}
-
 static inline struct AwsCanonicalHeaderDetails ngx_aws_auth__canonize_headers(ngx_pool_t *pool,
 		const ngx_http_request_t *req,
 		const ngx_str_t *s3_bucket, const ngx_str_t *amz_date,
